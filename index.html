@@ -15,9 +15,65 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: #000;
             min-height: 100vh;
             position: relative;
+        }
+
+        /* Animated gradient background */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+            z-index: 0;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) scale(1);
+                opacity: 0;
+            }
         }
 
         .canvas-container {
@@ -26,7 +82,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: 2;
             pointer-events: none;
         }
 
@@ -37,7 +93,7 @@
 
         .content {
             position: relative;
-            z-index: 2;
+            z-index: 3;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -47,184 +103,316 @@
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 30px;
             padding: 60px 40px;
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4), 
+                        0 0 100px rgba(255, 255, 255, 0.1) inset;
             text-align: center;
-            animation: fadeInScale 1s ease-out;
-            backdrop-filter: blur(10px);
+            animation: fadeInScale 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
         @keyframes fadeInScale {
             from {
                 opacity: 0;
-                transform: scale(0.8) translateY(50px);
+                transform: scale(0.5) translateY(100px) rotateX(20deg);
             }
             to {
                 opacity: 1;
-                transform: scale(1) translateY(0);
+                transform: scale(1) translateY(0) rotateX(0);
             }
         }
 
         .rings {
             font-size: 80px;
             margin-bottom: 20px;
-            animation: bounce 2s infinite;
+            animation: ringsBounce 2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+            position: relative;
+            z-index: 1;
         }
 
-        @keyframes bounce {
+        @keyframes ringsBounce {
             0%, 100% {
-                transform: translateY(0) rotate(0deg);
+                transform: translateY(0) scale(1) rotate(0deg);
             }
-            50% {
-                transform: translateY(-20px) rotate(5deg);
+            25% {
+                transform: translateY(-30px) scale(1.1) rotate(-5deg);
+            }
+            75% {
+                transform: translateY(-15px) scale(1.05) rotate(5deg);
             }
         }
 
         h1 {
-            font-size: 3.5em;
-            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+            font-size: 3.8em;
+            background: linear-gradient(135deg, #fff, #ffd700, #fff, #ff69b4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 20px;
             font-weight: bold;
-            animation: gradientShift 3s ease infinite;
-            background-size: 200% 200%;
+            animation: titlePulse 2s ease-in-out infinite;
+            background-size: 300% 300%;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            position: relative;
+            z-index: 1;
         }
 
-        @keyframes gradientShift {
+        @keyframes titlePulse {
             0%, 100% {
                 background-position: 0% 50%;
+                transform: scale(1);
             }
             50% {
                 background-position: 100% 50%;
+                transform: scale(1.05);
             }
         }
 
         .names {
-            font-size: 2.5em;
-            color: #764ba2;
+            font-size: 2.8em;
+            color: #fff;
             margin: 30px 0;
             font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.8), 
+                         0 0 40px rgba(255, 105, 180, 0.5);
+            animation: namesGlow 2s ease-in-out infinite alternate;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes namesGlow {
+            from {
+                text-shadow: 0 0 20px rgba(255, 105, 180, 0.8), 
+                             0 0 40px rgba(255, 105, 180, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 
+                             0 0 60px rgba(255, 215, 0, 0.5),
+                             0 0 80px rgba(255, 215, 0, 0.3);
+            }
         }
 
         .heart {
             display: inline-block;
             color: #ff6b6b;
-            animation: heartbeat 1.5s infinite;
+            animation: heartbeat 1.2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
             font-size: 1.2em;
-            margin: 0 10px;
+            margin: 0 15px;
+            filter: drop-shadow(0 0 15px rgba(255, 107, 107, 0.8));
         }
 
         @keyframes heartbeat {
             0%, 100% {
                 transform: scale(1);
             }
-            25% {
-                transform: scale(1.2);
+            10% {
+                transform: scale(1.3) rotate(-5deg);
             }
-            50% {
+            20% {
+                transform: scale(1) rotate(5deg);
+            }
+            30% {
+                transform: scale(1.3) rotate(-5deg);
+            }
+            40% {
                 transform: scale(1);
             }
         }
 
         .date-container {
-            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
-            padding: 20px 40px;
-            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 105, 180, 0.3));
+            padding: 25px 45px;
+            border-radius: 25px;
             margin: 30px 0;
-            box-shadow: 0 10px 25px rgba(253, 203, 110, 0.3);
+            box-shadow: 0 10px 40px rgba(255, 215, 0, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: dateFloat 3s ease-in-out infinite;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes dateFloat {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-10px) scale(1.02);
+            }
         }
 
         .date {
-            font-size: 1.8em;
-            color: #2d3436;
+            font-size: 1.9em;
+            color: #fff;
             font-weight: bold;
-        }
-
-        .message {
-            font-size: 1.4em;
-            line-height: 1.8;
-            color: #2d3436;
-            margin: 30px 0;
-            text-align: center;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .countdown-container {
-            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
-            padding: 30px;
-            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(106, 92, 254, 0.4), rgba(108, 92, 231, 0.4));
+            padding: 35px;
+            border-radius: 25px;
             margin: 30px 0;
             color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 50px rgba(106, 92, 254, 0.4);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
         }
 
         .countdown-title {
-            font-size: 1.5em;
-            margin-bottom: 20px;
+            font-size: 1.7em;
+            margin-bottom: 25px;
             font-weight: bold;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
         .countdown {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 25px;
             flex-wrap: wrap;
         }
 
         .countdown-item {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            border-radius: 15px;
-            min-width: 100px;
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 20px;
+            min-width: 110px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+            animation: countItemPulse 2s ease-in-out infinite;
+        }
+
+        .countdown-item:nth-child(1) { animation-delay: 0s; }
+        .countdown-item:nth-child(2) { animation-delay: 0.2s; }
+        .countdown-item:nth-child(3) { animation-delay: 0.4s; }
+        .countdown-item:nth-child(4) { animation-delay: 0.6s; }
+
+        @keyframes countItemPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 10px 30px rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        .countdown-item:hover {
+            transform: scale(1.1) translateY(-5px);
         }
 
         .countdown-value {
-            font-size: 3em;
+            font-size: 3.2em;
             font-weight: bold;
             display: block;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
         }
 
         .countdown-label {
-            font-size: 0.9em;
-            opacity: 0.9;
+            font-size: 0.95em;
+            opacity: 0.95;
             text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .message {
+            font-size: 1.5em;
+            line-height: 1.9;
+            color: #fff;
+            margin: 30px 0;
+            text-align: center;
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+            animation: messageFade 3s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes messageFade {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
         }
 
         .wishes {
-            background: linear-gradient(135deg, #ff9ff3, #feca57);
-            padding: 30px;
-            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 159, 243, 0.3), rgba(254, 202, 87, 0.3));
+            padding: 35px;
+            border-radius: 25px;
             margin: 30px 0;
-            color: #2d3436;
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 50px rgba(255, 159, 243, 0.4);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
         }
 
         .wishes-title {
-            font-size: 1.8em;
+            font-size: 2em;
             font-weight: bold;
             margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
         .wishes-text {
-            font-size: 1.2em;
-            line-height: 1.8;
+            font-size: 1.3em;
+            line-height: 1.9;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .signature {
             margin-top: 40px;
-            font-size: 1.5em;
-            color: #636e72;
+            font-size: 1.6em;
+            color: #fff;
             font-style: italic;
+            text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+            animation: signatureFade 4s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes signatureFade {
+            0%, 100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.03);
+            }
         }
 
         .signature strong {
-            color: #764ba2;
+            color: #ffd700;
             font-weight: bold;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
         }
 
         .audio-control {
@@ -232,61 +420,95 @@
             bottom: 30px;
             right: 30px;
             background: linear-gradient(135deg, #667eea, #764ba2);
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.6);
             z-index: 1000;
-            transition: transform 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 3px solid rgba(255, 255, 255, 0.3);
         }
 
         .audio-control:hover {
-            transform: scale(1.1);
+            transform: scale(1.2) rotate(10deg);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.8);
         }
 
         .audio-control.playing {
-            animation: pulse 1.5s infinite;
+            animation: audioRotate 2s linear infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        @keyframes audioRotate {
+            0% {
+                transform: rotate(0deg) scale(1);
+                box-shadow: 0 10px 40px rgba(102, 126, 234, 0.6);
             }
             50% {
-                box-shadow: 0 10px 50px rgba(102, 126, 234, 0.6);
+                transform: rotate(180deg) scale(1.1);
+                box-shadow: 0 15px 60px rgba(255, 105, 180, 0.8);
+            }
+            100% {
+                transform: rotate(360deg) scale(1);
+                box-shadow: 0 10px 40px rgba(102, 126, 234, 0.6);
             }
         }
 
         .audio-icon {
             color: white;
-            font-size: 24px;
+            font-size: 28px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
         }
 
         .sparkle {
             position: fixed;
             pointer-events: none;
-            z-index: 1;
-            animation: sparkleFloat 3s ease-out forwards;
+            z-index: 4;
+            animation: sparkleFloat 2.5s ease-out forwards;
+            font-size: 30px;
         }
 
         @keyframes sparkleFloat {
             0% {
-                transform: translateY(0) rotate(0deg);
+                transform: translateY(0) rotate(0deg) scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-150px) rotate(180deg) scale(1.5);
                 opacity: 1;
             }
             100% {
-                transform: translateY(-200px) rotate(360deg);
+                transform: translateY(-250px) rotate(360deg) scale(0);
                 opacity: 0;
+            }
+        }
+
+        .celebration-emoji {
+            font-size: 55px;
+            display: inline-block;
+            animation: emojiSpin 4s ease-in-out infinite;
+            margin: 0 15px;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.6));
+        }
+
+        @keyframes emojiSpin {
+            0%, 100% {
+                transform: rotate(0deg) scale(1);
+            }
+            25% {
+                transform: rotate(15deg) scale(1.2);
+            }
+            75% {
+                transform: rotate(-15deg) scale(1.2);
             }
         }
 
         @media (max-width: 768px) {
             .card {
-                padding: 40px 20px;
+                padding: 40px 25px;
             }
 
             h1 {
@@ -306,36 +528,32 @@
             }
 
             .countdown-value {
-                font-size: 2em;
+                font-size: 2.2em;
             }
 
             .wishes-title {
-                font-size: 1.5em;
+                font-size: 1.6em;
             }
 
             .wishes-text {
                 font-size: 1.1em;
             }
-        }
 
-        .celebration-emoji {
-            font-size: 50px;
-            display: inline-block;
-            animation: rotate 3s linear infinite;
-            margin: 0 10px;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
+            .rings {
+                font-size: 60px;
             }
-            to {
-                transform: rotate(360deg);
+
+            .celebration-emoji {
+                font-size: 40px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="gradient-bg"></div>
+    
+    <div class="particles" id="particles"></div>
+
     <div class="canvas-container">
         <canvas id="confetti-canvas"></canvas>
     </div>
@@ -381,9 +599,9 @@
                 <span class="celebration-emoji">🎊</span>
             </div>
             <div class="message">
-                <span class="celebration-emoji">🎉</span>
+                <span class="celebration-emoji">💝</span>
                  Любовь никогда не проходит!
-                <span class="celebration-emoji">🎊</span>
+                <span class="celebration-emoji">✨</span>
             </div>
             <div class="wishes">
                 <div class="wishes-title">Наши пожелания:</div>
@@ -400,7 +618,7 @@
                 С любовью,<br>
                 <strong>ваши друзья Рустам и Таня</strong>
                 <br>
-                <span style="font-size: 1.2em;">🎈🎁🎉</span>
+                <span style="font-size: 1.3em;">🎈🎁🎉</span>
             </div>
         </div>
     </div>
@@ -414,7 +632,18 @@
     </audio>
 
     <script>
-        // Confetti animation
+        // Create floating particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Enhanced confetti animation
         const canvas = document.getElementById('confetti-canvas');
         const ctx = canvas.getContext('2d');
         
@@ -427,8 +656,9 @@
         });
 
         const confetti = [];
-        const confettiCount = 150;
-        const colors = ['#667eea', '#764ba2', '#f093fb', '#feca57', '#ff9ff3', '#ffeaa7', '#ff6b6b', '#4ecdc4'];
+        const confettiCount = 200;
+        const colors = ['#667eea', '#764ba2', '#f093fb', '#feca57', '#ff9ff3', '#ffeaa7', '#ff6b6b', '#4ecdc4', '#ffd700', '#ff69b4'];
+        const shapes = ['circle', 'square', 'triangle'];
 
         class Confetto {
             constructor() {
@@ -439,25 +669,28 @@
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = -20;
-                this.size = Math.random() * 8 + 4;
-                this.speedY = Math.random() * 3 + 2;
-                this.speedX = Math.random() * 2 - 1;
+                this.size = Math.random() * 10 + 5;
+                this.speedY = Math.random() * 4 + 2;
+                this.speedX = Math.random() * 4 - 2;
                 this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.shape = shapes[Math.floor(Math.random() * shapes.length)];
                 this.rotation = Math.random() * 360;
-                this.rotationSpeed = Math.random() * 10 - 5;
+                this.rotationSpeed = Math.random() * 15 - 7.5;
+                this.opacity = Math.random() * 0.5 + 0.5;
             }
 
             update() {
                 this.y += this.speedY;
                 this.x += this.speedX;
                 this.rotation += this.rotationSpeed;
+                this.speedY += 0.05; // gravity
 
-                if (this.y > canvas.height) {
+                if (this.y > canvas.height + 50) {
                     this.reset();
                 }
 
-                if (this.x > canvas.width || this.x < 0) {
-                    this.speedX = -this.speedX;
+                if (this.x > canvas.width + 50 || this.x < -50) {
+                    this.speedX = -this.speedX * 0.8;
                 }
             }
 
@@ -465,8 +698,24 @@
                 ctx.save();
                 ctx.translate(this.x, this.y);
                 ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
                 ctx.fillStyle = this.color;
-                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+
+                if (this.shape === 'circle') {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (this.shape === 'square') {
+                    ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                } else if (this.shape === 'triangle') {
+                    ctx.beginPath();
+                    ctx.moveTo(0, -this.size / 2);
+                    ctx.lineTo(this.size / 2, this.size / 2);
+                    ctx.lineTo(-this.size / 2, this.size / 2);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+
                 ctx.restore();
             }
         }
@@ -531,12 +780,10 @@
 
         // Auto-play music on user interaction
         document.addEventListener('DOMContentLoaded', () => {
-            // Try to autoplay
             audio.play().then(() => {
                 isPlaying = true;
                 audioControl.classList.add('playing');
             }).catch(() => {
-                // Autoplay prevented, wait for user interaction
                 const startAudio = () => {
                     if (!isPlaying) {
                         audio.play().then(() => {
@@ -553,27 +800,27 @@
             });
         });
 
-        // Sparkle effect on mouse move
-        let sparkleTimer;
+        // Enhanced sparkle effect
+        let lastSparkleTime = 0;
         document.addEventListener('mousemove', (e) => {
-            clearTimeout(sparkleTimer);
-            sparkleTimer = setTimeout(() => {
+            const now = Date.now();
+            if (now - lastSparkleTime > 100) {
                 createSparkle(e.clientX, e.clientY);
-            }, 50);
+                lastSparkleTime = now;
+            }
         });
 
         function createSparkle(x, y) {
             const sparkle = document.createElement('div');
             sparkle.className = 'sparkle';
-            sparkle.textContent = ['✨', '💫', '⭐', '🌟'][Math.floor(Math.random() * 4)];
-            sparkle.style.left = x + 'px';
-            sparkle.style.top = y + 'px';
-            sparkle.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            sparkle.textContent = ['✨', '💫', '⭐', '🌟', '💖', '💕'][Math.floor(Math.random() * 6)];
+            sparkle.style.left = (x - 15) + 'px';
+            sparkle.style.top = (y - 15) + 'px';
             document.body.appendChild(sparkle);
 
             setTimeout(() => {
                 sparkle.remove();
-            }, 3000);
+            }, 2500);
         }
 
         // Celebration sound effects with Tone.js
@@ -586,6 +833,7 @@
             const now = Tone.now();
             synth.triggerAttackRelease(['C5', 'E5', 'G5'], '8n', now);
             synth.triggerAttackRelease(['E5', 'G5', 'C6'], '8n', now + 0.2);
+            synth.triggerAttackRelease(['G5', 'C6', 'E6'], '4n', now + 0.4);
         }
 
         // Play celebration sound on load
@@ -596,6 +844,13 @@
                 console.log('Sound effect failed:', e);
             }
         }, 500);
+
+        // Random sparkles
+        setInterval(() => {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            createSparkle(x, y);
+        }, 800);
     </script>
 </body>
 </html>
